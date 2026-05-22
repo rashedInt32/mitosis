@@ -162,6 +162,33 @@ backup_and_link() { # $1 = source in repo, $2 = destination
   exit 1
 }
 
+# ── Sanity check: ZIP download / unstable location ────────────
+# install.sh symlinks every config back to $DOTFILES, so the repo must sit at
+# a stable path and be a real git clone. A ZIP unpacked in ~/Downloads fails
+# both: the symlinks break when the folder is moved or cleared, and
+# git pull / git push (the point of two-way sync) will not work.
+not_git=false; in_downloads=false
+[ -d "$DOTFILES/.git" ] || not_git=true
+case "$DOTFILES" in "$HOME/Downloads"/*) in_downloads=true ;; esac
+
+if [ "$not_git" = true ] || [ "$in_downloads" = true ]; then
+  warn "This repo may be in the wrong place to install from:"
+  [ "$not_git" = true ]      && echo "    - it is not a git repo (looks like a ZIP download)"
+  [ "$in_downloads" = true ] && echo "    - it is inside ~/Downloads"
+  echo "  install.sh will symlink your configs back to:"
+  echo "    $DOTFILES"
+  echo "  That path must be stable and a real git clone, or the symlinks break"
+  echo "  if it moves and 'git pull' / 'git push' will not work."
+  echo "  Recommended: clone with git into ~/Documents/codes/packages/mitosis,"
+  echo "  then run install.sh from there."
+  printf 'Continue anyway? [y/N] '
+  ans=""; read -r ans || true
+  case "$ans" in
+    [Yy]*) warn "Continuing from $DOTFILES." ;;
+    *) echo "Aborted. Re-run from a proper git clone."; exit 1 ;;
+  esac
+fi
+
 bold "Bootstrapping developer environment from $DOTFILES"
 
 # ── 1. Xcode Command Line Tools ───────────────────────────────

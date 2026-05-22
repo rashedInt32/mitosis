@@ -27,6 +27,15 @@ git clone https://github.com/rashedInt32/mitosis.git ~/Documents/codes/packages/
 ~/Documents/codes/packages/mitosis/install.sh
 ```
 
+On a brand-new Mac with no developer tools, the first `git clone` triggers the
+Xcode Command Line Tools installer (macOS ships a `git` stub for exactly this).
+Click through the dialog, wait for it to finish, then re-run the same `git
+clone` command.
+
+Do not download the repo as a ZIP. `install.sh` symlinks every config back to
+its own location, so the repo must live at a stable path and be a real git
+clone for `git pull` and `git push` to work.
+
 `install.sh` runs these steps, in order:
 
 1. Xcode Command Line Tools (GUI installer; click through, then re-run)
