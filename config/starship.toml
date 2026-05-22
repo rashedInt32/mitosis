@@ -1,0 +1,197 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_1)\
+$os\
+$username\
+[](bg:color_2 fg:color_1)\
+$directory\
+[](fg:color_2 bg:color_3)\
+$git_branch\
+$git_status\
+[](fg:color_3 bg:color_4)\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:color_4 bg:color_5)\
+$docker_context\
+$conda\
+$pixi\
+[](fg:color_5 bg:color_6)\
+$time\
+[ ](fg:color_6)\
+$line_break$character"""
+
+palette = 'gradient_modern'
+
+[palettes.gradient_modern]
+color_fg0 = '#FFFFFF'          # White text
+color_bg1 = '#1E1E1E'          # Dark text
+color_bg3 = '#2E2E2E'
+color_1 = '#FF6B6B'            # Coral red (bright) → dark text
+color_2 = '#E28F2A'            # Deep orange → dark text
+color_3 = '#E6C229'            # Golden yellow → dark text
+color_4 = '#43B581'            # Emerald teal → dark text
+color_5 = '#4D96FF'            # Vibrant blue → white text
+color_6 = '#8C6FF0'            # Soft purple → white text
+color_7 = '#e84118'
+color_8 = '#32ff7e'
+color_9 = '#fff200'
+color_10 = '#ff9f1a'
+
+
+
+# ────────────────────────────────
+# OS / USER
+# ────────────────────────────────
+[os]
+disabled = false
+style = "bg:color_1 fg:color_bg1"   # dark text for contrast
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[username]
+show_always = true
+style_user = "bg:color_1 fg:color_bg1"   # dark text
+style_root = "bg:color_1 fg:color_bg1"
+format = '[ $user ]($style)'
+
+# ────────────────────────────────
+# DIRECTORY
+# ────────────────────────────────
+[directory]
+style = "fg:color_bg1 bg:color_2"        # dark text for improved contrast
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+# ────────────────────────────────
+# GIT
+# ────────────────────────────────
+[git_branch]
+symbol = ""
+style = "bg:color_3"
+format = '[[ $symbol $branch ](fg:color_bg1 bg:color_3)]($style)'  # dark text
+
+[git_status]
+style = "bg:color_3"
+format = '[[($all_status$ahead_behind )](fg:color_bg1 bg:color_3)]($style)'  # dark text
+
+# ────────────────────────────────
+# LANGUAGES (C, C++, JS, RUST, etc.)
+# ────────────────────────────────
+[c]
+symbol = " "
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'  # dark text
+
+[rust]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[php]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[java]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+[python]
+symbol = ""
+style = "bg:color_4"
+format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+
+# ────────────────────────────────
+# DOCKER / ENVIRONMENT
+# ────────────────────────────────
+[docker_context]
+symbol = ""
+style = "bg:color_5"
+format = '[[ $symbol( $context) ](fg:color_fg0 bg:color_5)]($style)'  # white text
+
+[conda]
+style = "bg:color_5"
+format = '[[ $symbol( $environment) ](fg:color_fg0 bg:color_5)]($style)'
+
+# ────────────────────────────────
+# TIME (Disabled)
+# ────────────────────────────────
+[time]
+disabled = true
+time_format = "%R"
+style = "bg:color_6"
+format = '[[  $time ](fg:color_fg0 bg:color_6)]($style)'  # white text
+
+# ────────────────────────────────
+# CHARACTER / PROMPT END
+# ────────────────────────────────
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[  ](bold fg:color_8)'             # futuristic check/arrow
+error_symbol = '[  ](bold fg:color_7)'               # bold angular X
+vimcmd_symbol = '[ 󰌌 ](bold fg:color_9)'             # terminal cursor
+vimcmd_replace_one_symbol = '[󰞷](bold fg:color_6)' # circular tech arrow
+vimcmd_replace_symbol = '[󰞸](bold fg:color_6)'     # double tech arrow
+vimcmd_visual_symbol = '[󰌖](bold fg:color_3)'      # swap icon, selection mode

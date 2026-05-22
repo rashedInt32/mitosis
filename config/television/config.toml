@@ -1,0 +1,190 @@
+# TELEVISION KILLER CONFIG
+# ========================
+# Optimized for productivity with advanced features enabled
+
+# General settings
+# ----------------------------------------------------------------------------
+# Higher tick rate for smoother UI
+tick_rate = 60
+default_channel = "files"
+# Large history with global sharing across all channels
+history_size = 2000
+global_history = true
+
+# UI Configuration
+# ----------------------------------------------------------------------------
+[ui]
+# Use 90% of screen for a centered, focused look
+ui_scale = 90
+orientation = "landscape"
+# Tokyonight theme - excellent contrast and modern look
+theme = "default"
+
+[ui.input_bar]
+position = "top"
+prompt = "❯"
+border_type = "rounded"
+# Add subtle padding for cleaner look
+padding = {left = 1, right = 1, top = 0, bottom = 0}
+
+[ui.status_bar]
+# Use nerdfont separators if available
+separator_open = ""
+separator_close = ""
+hidden = false
+
+[ui.results_panel]
+border_type = "rounded"
+padding = {left = 0, right = 0, top = 0, bottom = 0}
+
+[ui.preview_panel]
+# Larger preview panel (60% of width)
+size = 60
+scrollbar = true
+border_type = "rounded"
+hidden = false
+padding = {left = 1, right = 1, top = 0, bottom = 0}
+
+[ui.help_panel]
+show_categories = true
+hidden = true
+
+[ui.remote_control]
+show_channel_descriptions = true
+# Keep original order (most used first)
+sort_alphabetically = false
+disabled = false
+
+# Theme Overrides - Tokyonight with custom tweaks
+# ----------------------------------------------------------------------------
+[ui.theme_overrides]
+# Professional color scheme with good contrast
+selection_bg = "#2c3e50"
+selection_fg = "#ffffff"
+text_fg = "#abb2bf"
+dimmed_text_fg = "#5c6370"
+match_fg = "#d19a66"
+match_bg = "#2d3139"
+border_fg = "#3e4451"
+preview_title_fg = "#61afef"
+# Channel indicator - professional muted colors
+channel_mode_fg = "#abb2bf"
+channel_mode_bg = "#2c3e50"
+remote_control_mode_fg = "#ffffff"
+remote_control_mode_bg = "#2c3e50"
+
+# Keybindings - Enhanced for power users
+# ----------------------------------------------------------------------------
+[keybindings]
+# Application control
+esc = "quit"
+ctrl-c = "quit"
+ctrl-q = "quit"
+
+# Navigation - Vim style + arrow keys
+down = "select_next_entry"
+ctrl-n = "select_next_entry"
+ctrl-j = "select_next_entry"
+up = "select_prev_entry"
+ctrl-p = "select_prev_entry"
+ctrl-k = "select_prev_entry"
+
+# Page navigation
+shift-pagedown = "select_next_page"
+shift-pageup = "select_prev_page"
+ctrl-d = "select_next_page"
+
+# History navigation
+ctrl-up = "select_prev_history"
+ctrl-down = "select_next_history"
+alt-p = "select_prev_history"
+alt-n = "select_next_history"
+
+# Selection and confirmation
+tab = "toggle_selection_down"
+backtab = "toggle_selection_up"
+enter = "confirm_selection"
+ctrl-space = "toggle_selection_down"
+
+# Preview control
+ctrl-f = "cycle_previews"
+alt-s = "cycle_sources"
+alt-j = "scroll_preview_half_page_down"
+alt-k = "scroll_preview_half_page_up"
+
+# Data operations
+ctrl-y = "copy_entry_to_clipboard"
+ctrl-r = "reload_source"
+ctrl-s = "cycle_sources"
+
+# UI toggles
+ctrl-t = "toggle_remote_control"
+ctrl-x = "toggle_action_picker"
+ctrl-o = "toggle_preview"
+ctrl-h = "toggle_help"
+f12 = "toggle_status_bar"
+ctrl-l = "toggle_layout"
+
+# Input field - Emacs style
+backspace = "delete_prev_char"
+ctrl-w = "delete_prev_word"
+ctrl-u = "delete_line"
+alt-backspace = "delete_prev_word"
+alt-d = "delete_next_word"
+delete = "delete_next_char"
+left = "go_to_prev_char"
+right = "go_to_next_char"
+home = "go_to_input_start"
+ctrl-a = "go_to_input_start"
+end = "go_to_input_end"
+ctrl-e = "go_to_input_end"
+alt-f = "go_to_next_word"
+alt-b = "go_to_prev_word"
+
+# Shell Integration - Enhanced for productivity
+# ----------------------------------------------------------------------------
+[shell_integration]
+fallback_channel = "files"
+
+[shell_integration.channel_triggers]
+# Navigation and listing
+"dirs" = ["cd", "ls", "rmdir", "z", "zi", "zoxide"]
+"files" = [
+  "cat", "less", "head", "tail", "vim", "nvim", "vi", "nano", "micro",
+  "bat", "cp", "mv", "rm", "touch", "chmod", "chown", "ln",
+  "tar", "zip", "unzip", "gzip", "gunzip", "xz", "7z",
+  "open", "xdg-open", "start"
+]
+
+# Git workflows
+"git-branch" = ["git checkout", "git branch", "git merge", "git rebase", "git pull", "git push"]
+"git-diff" = ["git add", "git restore", "git reset", "git checkout --"]
+"git-log" = ["git log", "git show", "git diff HEAD", "git blame"]
+"git-files" = ["git diff --name-only", "git status"]
+"git-stash" = ["git stash", "git stash pop"]
+"git-tags" = ["git tag", "git push --tags"]
+
+# Environment and configuration
+"env" = ["export", "unset", "env"]
+"alias" = ["alias", "unalias"]
+"path" = ["PATH=", "export PATH"]
+
+# Container workflows
+"docker-images" = ["docker run", "docker pull", "docker rmi"]
+"docker-containers" = ["docker exec", "docker stop", "docker start", "docker rm", "docker logs", "docker attach"]
+
+# Package managers
+"brew-packages" = ["brew install", "brew uninstall", "brew info"]
+"cargo-crates" = ["cargo add", "cargo remove", "cargo install"]
+"node-packages" = ["npm install", "npm uninstall", "pnpm add", "pnpm remove", "yarn add", "yarn remove"]
+
+# Development
+"git-repos" = ["nvim", "code", "hx", "vim", "git clone"]
+"recent-files" = ["git diff HEAD", "git show"]
+"text" = ["grep", "rg", "ag", "ack", "find"]
+"make-targets" = ["make", "just"]
+"man-pages" = ["man", "help"]
+
+[shell_integration.keybindings]
+smart_autocomplete = "ctrl-t"
+command_history = "ctrl-r"
