@@ -247,13 +247,32 @@ else
   warn "Claude Code install may have failed — review the output above."
 fi
 
-# ── 7. oh-my-zsh ──────────────────────────────────────────────
+# ── 7. oh-my-zsh + custom plugins ─────────────────────────────
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   info "Installing oh-my-zsh..."
   RUNZSH=no KEEP_ZSHRC=yes sh -c \
     "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 ok "oh-my-zsh ready"
+
+# Plugins enabled by zconfig's .zshrc that oh-my-zsh does not ship. Without
+# these, every new shell prints a "plugin not found" warning.
+info "Installing zsh custom plugins..."
+zsh_plugins="$HOME/.oh-my-zsh/custom/plugins"
+mkdir -p "$zsh_plugins"
+for spec in \
+  "zsh-autosuggestions=https://github.com/zsh-users/zsh-autosuggestions" \
+  "fast-syntax-highlighting=https://github.com/zdharma-continuum/fast-syntax-highlighting" \
+  "zsh-defer=https://github.com/romkatv/zsh-defer"; do
+  name="${spec%%=*}"; url="${spec#*=}"
+  if [ -d "$zsh_plugins/$name/.git" ]; then
+    ok "zsh plugin present: $name"
+  elif git clone --depth 1 "$url" "$zsh_plugins/$name" 2>/dev/null; then
+    ok "cloned zsh plugin: $name"
+  else
+    warn "failed to clone $name — new shells will warn until it is installed."
+  fi
+done
 
 # ── 8. Config repos that manage their own directory ───────────
 mkdir -p "$HOME/.config"

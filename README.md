@@ -47,7 +47,8 @@ clone for `git pull` and `git push` to work.
 4. Rust
 5. `Brewfile`
 6. Claude Code CLI
-7. oh-my-zsh
+7. oh-my-zsh, plus the zsh plugins zconfig's `.zshrc` needs
+   (zsh-autosuggestions, fast-syntax-highlighting, zsh-defer)
 8. Clones `nvim` / `zconfig` / `ghostty`
 9. Symlinks `~/.config/` entries
 10. Symlinks home dotfiles
