@@ -11,6 +11,14 @@
 
 set -euo pipefail
 
+# Must run as a normal user. Homebrew refuses to install or run as root, and
+# running as root would create root-owned files throughout your home directory.
+if [ "$(id -u)" -eq 0 ]; then
+  echo "Do not run install.sh as root or with sudo." >&2
+  echo "Run it as your normal user; it asks for your password only when needed." >&2
+  exit 1
+fi
+
 # Repo location derives from this script — works wherever it is cloned.
 DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)}"
 BACKUP="$HOME/mitosis-backup-$(date +%Y%m%d-%H%M%S)"
