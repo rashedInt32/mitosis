@@ -1,4 +1,4 @@
-# dotfiles
+# mitosis
 
 Personal macOS developer environment. `install.sh` sets it up on a new Mac.
 
@@ -23,8 +23,8 @@ config directory. `install.sh` clones them:
 ## Bootstrap a new Mac
 
 ```sh
-git clone https://github.com/rashedInt32/dotfiles.git ~/Documents/codes/packages/dotfiles
-~/Documents/codes/packages/dotfiles/install.sh
+git clone https://github.com/rashedInt32/mitosis.git ~/Documents/codes/packages/mitosis
+~/Documents/codes/packages/mitosis/install.sh
 ```
 
 `install.sh` runs these steps, in order:
@@ -48,8 +48,8 @@ git clone https://github.com/rashedInt32/dotfiles.git ~/Documents/codes/packages
 Then, optionally:
 
 ```sh
-~/Documents/codes/packages/dotfiles/install-extras.sh                   # npm / cargo / go globals
-brew bundle --file=~/Documents/codes/packages/dotfiles/Brewfile.vscode  # VS Code + extensions
+~/Documents/codes/packages/mitosis/install-extras.sh                   # npm / cargo / go globals
+brew bundle --file=~/Documents/codes/packages/mitosis/Brewfile.vscode  # VS Code + extensions
 ```
 
 The three config repos are public, so they clone without SSH. SSH is only
@@ -59,7 +59,7 @@ skippable. Clones fall back to https.
 ## How it works
 
 `install.sh` is idempotent and safe to re-run. Anything it would overwrite is
-moved to `~/dotfiles-backup-<timestamp>/` before a symlink takes its place.
+moved to `~/mitosis-backup-<timestamp>/` before a symlink takes its place.
 
 Your git identity (name and email) is kept out of this public repo.
 `home/gitconfig` includes `~/.gitconfig.local`, an untracked per-machine file

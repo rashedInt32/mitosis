@@ -3,17 +3,17 @@
 # install.sh — bootstrap a macOS developer environment from this repo.
 #
 # Usage on a fresh Mac:
-#   git clone https://github.com/rashedInt32/dotfiles.git ~/Documents/codes/packages/dotfiles
-#   ~/Documents/codes/packages/dotfiles/install.sh
+#   git clone https://github.com/rashedInt32/mitosis.git ~/Documents/codes/packages/mitosis
+#   ~/Documents/codes/packages/mitosis/install.sh
 #
 # Idempotent: re-running is safe. Anything overwritten is moved to
-# ~/dotfiles-backup-<timestamp>/ first.
+# ~/mitosis-backup-<timestamp>/ first.
 
 set -euo pipefail
 
 # Repo location derives from this script — works wherever it is cloned.
 DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)}"
-BACKUP="$HOME/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+BACKUP="$HOME/mitosis-backup-$(date +%Y%m%d-%H%M%S)"
 GIT_EMAIL=""  # captured during SSH setup, reused for ~/.gitconfig.local
 
 # Repos that own their config directory outright. SSH URLs so `git push`
