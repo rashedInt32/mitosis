@@ -8,6 +8,7 @@ Personal macOS developer environment. `install.sh` sets it up on a new Mac.
 |---------------------|------------------------------------------------------|
 | `install.sh`        | Bootstrap: Homebrew, tools, configs, symlinks        |
 | `install-extras.sh` | Optional npm / cargo / go global packages            |
+| `uninstall.sh`      | Reverse install.sh: remove symlinks, repos, tools    |
 | `Brewfile`          | Homebrew formulae, casks, taps                       |
 | `Brewfile.vscode`   | Optional VS Code + extensions                        |
 | `config/`           | Symlinked into `~/.config/` (e.g. `config/bat` to `~/.config/bat`) |
@@ -73,6 +74,22 @@ moved to `~/mitosis-backup-<timestamp>/` before a symlink takes its place.
 Your git identity (name and email) is kept out of this public repo.
 `home/gitconfig` includes `~/.gitconfig.local`, an untracked per-machine file
 that `install.sh` creates, prompting for or reusing your email.
+
+## Uninstall
+
+`uninstall.sh` reverses `install.sh`. It removes the symlinks in `~/.config`
+and `~/`, the cloned `nvim` / `zconfig` / `ghostty` repos, `tmux` TPM, and the
+tools install.sh added, including Homebrew and every Homebrew package on the
+machine.
+
+```sh
+~/Documents/codes/packages/mitosis/uninstall.sh
+```
+
+It lists what it will remove, asks once, then runs. Pass `-y` to skip the
+prompt. It does not touch your SSH key, the Xcode Command Line Tools, the
+`~/mitosis-backup-*` folders, or `~/.claude`; it prints how to remove those by
+hand.
 
 ## Set up manually
 
