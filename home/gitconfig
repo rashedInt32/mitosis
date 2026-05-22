@@ -1,0 +1,8 @@
+# Shared, public-safe git config.
+# Identity (name + email) lives in ~/.gitconfig.local — created per-machine
+# by install.sh and never committed to this repo.
+[include]
+	path = ~/.gitconfig.local
+
+[core]
+	editor = nvim
