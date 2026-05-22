@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+
+# generated / cache data — not real config
+config/karabiner/automatic_backups/
+# television cable channels — re-fetched by `tv update-channels`
+config/television/cable/
+
+# safety net: credential dirs are never copied here, but never commit them either
+config/github-copilot/
+config/configstore/
