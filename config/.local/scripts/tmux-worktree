@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# tmux-worktree — git worktrees as tmux sessions (herdr's prefix+shift+g, in tmux).
+#
+# Run inside a git repo. fzf lists, in one picker:
+#   ● branch   -> an existing worktree      -> switch to its tmux session
+#   + branch   -> a branch with no worktree -> create a worktree for it, then switch
+#   type name  -> no match                  -> new branch + worktree, then switch
+# One worktree = one branch = one tmux session, so you can run an agent in each
+# and hop between them with prefix+s / prefix+f like any other project.
+#
+# Note: git only lets a branch be checked out in ONE worktree at a time. A branch
+# already checked out (e.g. in the main repo dir) won't appear as a "+" candidate.
+
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+if [[ -z "$repo_root" ]]; then
+  echo "tmux-worktree: not inside a git repository"; sleep 1.5; exit 1
+fi
+repo_name=$(basename "$repo_root")
+wt_base="$HOME/.worktrees/$repo_name"
+
+wt_porcelain=$(git -C "$repo_root" worktree list --porcelain)
+
+# Existing worktrees as "● branch<TAB>branch<TAB>path"
+wt_rows=$(printf '%s\n' "$wt_porcelain" | awk '
+  /^worktree /{p=substr($0,10)}
+  /^branch /{b=$2; sub("refs/heads/","",b); print "● "b"\t"b"\t"p}
+  /^detached$/{print "● (detached)\t(detached)\t"p}
+')
+
+# Branches that already have a worktree (excluded from the "+" candidate list)
+wt_branches=$(printf '%s\n' "$wt_porcelain" | awk '
+  /^branch /{b=$2; sub("refs/heads/","",b); print b}')
+
+# Local branches without a worktree as "+ branch<TAB>branch<TAB>" (empty path)
+branch_rows=$(git -C "$repo_root" for-each-ref --format='%(refname:short)' refs/heads \
+  | awk -v have="$wt_branches" '
+      BEGIN{ n=split(have, a, "\n"); for (i=1;i<=n;i++) seen[a[i]]=1 }
+      { if (!seen[$0]) print "+ "$0"\t"$0"\t" }')
+
+list=$(printf '%s\n%s\n' "$wt_rows" "$branch_rows" | sed '/^$/d')
+
+sel=$(printf '%s\n' "$list" \
+  | fzf --with-nth=1 --delimiter=$'\t' --print-query \
+        --prompt='worktree ❯ ' \
+        --header='● switch · + create worktree for branch · type a new name = new branch')
+
+query=$(printf '%s\n' "$sel" | sed -n '1p')
+match=$(printf '%s\n' "$sel" | sed -n '2p')
+
+if [[ -n "$match" ]]; then
+  branch=$(printf '%s' "$match" | cut -f2)
+  path=$(printf '%s' "$match" | cut -f3)
+  if [[ -z "$path" ]]; then
+    # Existing branch, no worktree yet -> attach a worktree to it
+    path="$wt_base/$branch"
+    if [[ ! -d "$path" ]]; then
+      git -C "$repo_root" worktree add "$path" "$branch" 2>/tmp/tmux-worktree.err \
+        || { echo "failed to create worktree:"; cat /tmp/tmux-worktree.err; sleep 2.5; exit 1; }
+    fi
+  fi
+else
+  # No match -> create a new branch + worktree from the typed name
+  branch="$query"
+  [[ -z "$branch" ]] && exit 0
+  path="$wt_base/$branch"
+  if ! git -C "$repo_root" worktree add "$path" -b "$branch" 2>/tmp/tmux-worktree.err; then
+    # Branch may already exist -> attach a worktree to it instead of creating
+    git -C "$repo_root" worktree add "$path" "$branch" 2>>/tmp/tmux-worktree.err \
+      || { echo "failed to create worktree:"; cat /tmp/tmux-worktree.err; sleep 2.5; exit 1; }
+  fi
+fi
+
+[[ -z "$path" || ! -d "$path" ]] && exit 0
+
+# One tmux session per worktree (sanitize name: tmux forbids . : and spaces)
+session=$(printf '%s' "${repo_name}/${branch}" | tr './:, ' '_____')
+
+if ! tmux has-session -t "=$session" 2>/dev/null; then
+  tmux new-session -ds "$session" -c "$path"
+fi
+
+if [[ -n "${TMUX:-}" ]]; then
+  tmux switch-client -t "=$session"
+else
+  tmux attach-session -t "=$session"
+fi
