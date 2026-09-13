@@ -1,0 +1,2 @@
+# Open tmux-sessionizer picker in a brand-new Ghostty window
+cmd + shift - t : open -na Ghostty --args -e ~/.config/.local/scripts/tmux-sessionizer
