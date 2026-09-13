@@ -310,7 +310,17 @@ else
   warn "television (tv) not found — skipping cable channels (check the Brewfile step)."
 fi
 
-# ── 13. Misc ──────────────────────────────────────────────────
+# ── 13. Git hooks for this repo ───────────────────────────────
+# hooks/ is tracked; .git/hooks is not, so a fresh clone has no pre-commit
+# guard until this runs. Without it scripts/check-secrets.sh is committed but
+# dead, and this repo is public -- the one place a leak is unrecoverable.
+if [ -d "$DOTFILES/.git" ]; then
+  info "Pointing git hooks at $DOTFILES/hooks..."
+  git -C "$DOTFILES" config core.hooksPath hooks
+  ok "pre-commit secret scan enabled"
+fi
+
+# ── 14. Misc ──────────────────────────────────────────────────
 touch "$HOME/.hushlogin"
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   info "Installing tmux plugin manager (TPM)..."

@@ -11,7 +11,7 @@ tap "jesseduffield/lazygit"
 tap "ngrok/ngrok"
 tap "shivammathur/php"        # php@8.1 / php@8.3
 tap "sst/tap"                 # opencode
-tap "koekeishiya/formulae"    # no formula used below — remove if unneeded
+tap "koekeishiya/formulae"    # skhd
 tap "steipete/tap"            # no formula used below — remove if unneeded
 
 # ── Shell & terminal ──────────────────────────────────────────
@@ -40,6 +40,7 @@ brew "ripgrep"
 brew "tree"
 brew "coreutils"
 brew "git-delta"              # nicer git diffs
+brew "gitleaks"               # secret scanner — this repo's pre-commit hook
 brew "lazygit"
 brew "jj"                     # jujutsu VCS
 brew "hl"                     # log highlighter
@@ -51,6 +52,12 @@ brew "gromgit/brewtils/taproom"
 # ── System monitoring ─────────────────────────────────────────
 brew "asitop"
 brew "mactop"
+
+# ── Hotkeys ───────────────────────────────────────────────────
+# Config in config/skhd. Needs two things brew cannot do: start the service
+# with `skhd --start-service`, and grant it Accessibility in System Settings,
+# or it runs and silently swallows every binding.
+brew "skhd"
 
 # ── Languages & runtimes ──────────────────────────────────────
 brew "go"                     # required by install-extras.sh go tools

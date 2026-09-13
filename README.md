@@ -13,6 +13,8 @@ Personal macOS developer environment. `install.sh` sets it up on a new Mac.
 | `Brewfile.vscode`   | Optional VS Code + extensions                        |
 | `config/`           | Symlinked into `~/.config/` (e.g. `config/bat` to `~/.config/bat`) |
 | `home/`             | Symlinked into `~/` as dotfiles (`home/gitconfig` to `~/.gitconfig`) |
+| `hooks/`            | Git hooks for this repo; `install.sh` sets `core.hooksPath` |
+| `scripts/`          | Repo tooling, not installed anywhere (`check-secrets.sh`) |
 
 `nvim`, `zconfig` (zsh), and `ghostty` are separate repos that own their own
 config directory. `install.sh` clones them:
@@ -54,7 +56,8 @@ clone for `git pull` and `git push` to work.
 10. Symlinks home dotfiles
 11. Git identity
 12. `tv update-channels` (television cable channels)
-13. Misc (tmux TPM, `.hushlogin`)
+13. Git hooks for this repo (`core.hooksPath` to `hooks/`)
+14. Misc (tmux TPM, `.hushlogin`)
 
 Then, optionally:
 
@@ -106,5 +109,11 @@ These steps are not handled by the script:
   its config (`config/karabiner/`) is symlinked, but on first launch macOS
   requires manual approval. Enable the driver / system extension in System
   Settings > Privacy & Security, and grant Input Monitoring.
+- skhd hotkeys: the formula is in the `Brewfile` and its config
+  (`config/skhd/`) is symlinked, but brew cannot start it or grant it rights.
+  Run `skhd --start-service`, then grant Accessibility in System Settings >
+  Privacy & Security. Without that it runs and silently swallows every binding.
+- Git hooks: handled by `install.sh`. If you cloned without running it, run
+  `git config core.hooksPath hooks` or commits skip the secret scan.
 - `~/.oh-my-zsh`: installed fresh by its own installer.
 - RVM and LM Studio `PATH` lines in `home/profile` are machine-specific.

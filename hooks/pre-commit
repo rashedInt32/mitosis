@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Blocks the commit if gitleaks finds a credential in the staged changes.
+# See scripts/check-secrets.sh for why this one blocks rather than warns.
+root=$(git rev-parse --show-toplevel) || exit 0
+exec "$root/scripts/check-secrets.sh"
