@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
+# herdr-sessionizer — fzf directory picker for herdr.
+# Mirrors the tmux-sessionizer directory list, but instead of creating a tmux
+# session it opens the chosen directory as a NEW TAB in the current herdr
+# session/workspace (and focuses it). Bound to prefix+s via config.toml.
+
+export PATH="$HOME/.local/bin:$PATH"
 
 selected=$({
-  echo "$HOME/.claude"
   find ~/.config/ -mindepth 1 -maxdepth 1 -type d
   find ~/Herd/ -mindepth 1 -maxdepth 1 -type d
   find ~/Documents/codes/js -mindepth 1 -maxdepth 1 -type d
@@ -14,38 +19,22 @@ selected=$({
     ! -path "$HOME/Documents/codes/happydance/" \
     ! -path "$HOME/Documents/codes/packages/" \
     ! -path "$HOME/Documents/codes/star-woss"
-  # git worktrees created by tmux-worktree, laid out as ~/.worktrees/<repo>/<branch>.
-  # Branch names contain slashes, so match on the .git marker instead of a fixed depth.
-  find ~/.worktrees -mindepth 2 -maxdepth 5 \
-    -name node_modules -prune -o \
-    -name .git -exec dirname {} \; 2>/dev/null
 } | while IFS= read -r fullpath; do
   [[ -z "$fullpath" || ! -d "$fullpath" ]] && continue
   relpath="${fullpath/#$HOME\/Documents\//}"
-  relpath="${relpath/#$HOME\//}"
   [[ -n "$relpath" ]] && printf "%s\t%s\n" "$relpath" "$fullpath"
 done | fzf --with-nth=1 --delimiter="\t" --ansi | cut -d$'\t' -f2 | sed 's/[[:space:]]*$//')
 
 [[ -z "$selected" || ! -d "$selected" ]] && exit 0
 
-if [[ "$selected" == "$HOME/.worktrees/"* ]]; then
-  # Same session name tmux-worktree uses (<repo>_<branch>), so both land on one session.
-  selected_name=$(printf '%s' "${selected#"$HOME"/.worktrees/}" | tr './:, ' '_____')
-else
-  selected_name=$(basename "$selected" | tr ".,: " "____")
-fi
+label=$(basename "$selected")
 
-switch_to() {
-  if [[ -z "$TMUX" ]]; then
-    tmux attach-session -t "$selected_name"
-  else
-    tmux switch-client -t "$selected_name"
-  fi
-}
-
-if tmux has-session -t="$selected_name" 2>/dev/null; then
-  switch_to
+# Smart open:
+#   - git repo   -> new git-rooted WORKSPACE (enables worktrees / prefix+shift+g
+#                   for running agents on multiple branches)
+#   - non-git    -> new TAB in the current workspace
+if git -C "$selected" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  herdr workspace create --cwd "$selected" --label "$label" --focus >/dev/null 2>&1
 else
-  tmux new-session -ds "$selected_name" -c "$selected"
-  switch_to
+  herdr tab create --cwd "$selected" --label "$label" --focus >/dev/null 2>&1
 fi
