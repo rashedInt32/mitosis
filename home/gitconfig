@@ -6,3 +6,41 @@
 
 [core]
 	editor = nvim
+	pager = delta
+
+# delta only styles terminal git (log -p, show, diff). lazygit ignores
+# core.pager entirely -- it has its own git.pagers list, configured separately
+# in lazygit's config.yml.
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = tokyonight
+
+[diff]
+	# histogram pairs lines better than the default on refactors, so hunks
+	# split where the change actually is. Applies in lazygit too.
+	algorithm = histogram
+	renames = copies
+
+[merge]
+	# zdiff3 adds a third block to conflict markers showing the common
+	# ancestor, so it's visible which side changed what.
+	conflictstyle = zdiff3
+
+[rerere]
+	# Remembers how a conflict was resolved and replays it on the next
+	# rebase of the same branch. The single biggest win here.
+	enabled = true
+	autoupdate = true
+
+[push]
+	autoSetupRemote = true
+	followTags = true
+
+[fetch]
+	prune = true
+
+[init]
+	defaultBranch = main
