@@ -9,3 +9,5 @@ export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:/Users/rashed/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+. "$HOME/.atuin/bin/env"

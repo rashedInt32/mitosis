@@ -9,3 +9,6 @@ config/television/cable/
 # safety net: credential dirs are never copied here, but never commit them either
 config/github-copilot/
 config/configstore/
+
+# cargo-dist installer receipt — written by the atuin installer, machine-local
+config/atuin/atuin-receipt.json
