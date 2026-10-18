@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # herdr-sessionizer — fzf directory picker for herdr.
-# Mirrors the tmux-sessionizer directory list, but instead of creating a tmux
-# session it opens the chosen directory as a NEW TAB in the current herdr
-# session/workspace (and focuses it). Bound to prefix+s via config.toml.
+# Mirrors the tmux-sessionizer directory list (keep the two find blocks in
+# sync), but instead of creating a tmux session it opens the chosen directory
+# in the current herdr session: a git repo becomes a new focused WORKSPACE
+# (so prefix+shift+g worktrees work), anything else a new focused TAB.
+# Bound to prefix+s via config.toml.
 
 export PATH="$HOME/.local/bin:$PATH"
 
 selected=$({
+  echo "$HOME/.claude"
   find ~/.config/ -mindepth 1 -maxdepth 1 -type d
   find ~/Herd/ -mindepth 1 -maxdepth 1 -type d
   find ~/Documents/codes/js -mindepth 1 -maxdepth 1 -type d
@@ -19,20 +22,27 @@ selected=$({
     ! -path "$HOME/Documents/codes/happydance/" \
     ! -path "$HOME/Documents/codes/packages/" \
     ! -path "$HOME/Documents/codes/star-woss"
+  # git worktrees (tmux-worktree and herdr share ~/.worktrees/<repo>/<branch>).
+  # Branch names contain slashes, so match on the .git marker instead of a fixed depth.
+  find ~/.worktrees -mindepth 2 -maxdepth 5 \
+    -name node_modules -prune -o \
+    -name .git -exec dirname {} \; 2>/dev/null
 } | while IFS= read -r fullpath; do
   [[ -z "$fullpath" || ! -d "$fullpath" ]] && continue
   relpath="${fullpath/#$HOME\/Documents\//}"
+  relpath="${relpath/#$HOME\//}"
   [[ -n "$relpath" ]] && printf "%s\t%s\n" "$relpath" "$fullpath"
 done | fzf --with-nth=1 --delimiter="\t" --ansi | cut -d$'\t' -f2 | sed 's/[[:space:]]*$//')
 
 [[ -z "$selected" || ! -d "$selected" ]] && exit 0
 
-label=$(basename "$selected")
+if [[ "$selected" == "$HOME/.worktrees/"* ]]; then
+  # Same label shape tmux-worktree uses (<repo>/<branch>).
+  label="${selected#"$HOME"/.worktrees/}"
+else
+  label=$(basename "$selected")
+fi
 
-# Smart open:
-#   - git repo   -> new git-rooted WORKSPACE (enables worktrees / prefix+shift+g
-#                   for running agents on multiple branches)
-#   - non-git    -> new TAB in the current workspace
 if git -C "$selected" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   herdr workspace create --cwd "$selected" --label "$label" --focus >/dev/null 2>&1
 else
