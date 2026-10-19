@@ -31,7 +31,7 @@ $pixi\
 [](fg:color_5 bg:color_6)\
 $time\
 [ ](fg:color_6)\
-$line_break$character"""
+$line_break${env_var.SLUICE_WINDOWS}$character"""
 
 palette = 'gradient_modern'
 
@@ -212,3 +212,10 @@ vimcmd_replace_one_symbol = '[󰞷](bold fg:color_6)' # circular tech arrow
 vimcmd_replace_symbol = '[󰞸](bold fg:color_6)'     # double tech arrow
 vimcmd_visual_symbol = '[󰌖](bold fg:color_3)'      # swap icon, selection mode
 
+# sluice window mark: "◆2/3" before the prompt glyph while this session has
+# more than one window. The zshrc's _sluice_windows_mark exports the variable;
+# when it is unset the module renders nothing at all.
+[env_var.SLUICE_WINDOWS]
+variable = "SLUICE_WINDOWS"
+format = "[ ◆$env_value]($style)"
+style = "fg:color_6"
