@@ -10,16 +10,8 @@ $directory\
 $git_branch\
 $git_status\
 [](fg:color_3 bg:color_4)\
-$c\
-$cpp\
-$rust\
-$golang\
-$nodejs\
-$php\
-$java\
-$kotlin\
-$haskell\
-$python\
+$git_state\
+$package\
 [](fg:color_4 bg:color_5)\
 $docker_context\
 $conda\
@@ -33,14 +25,14 @@ palette = 'gradient_modern'
 
 [palettes.gradient_modern]
 color_fg0 = '#FFFFFF'          # White text
-color_bg1 = '#1E1E1E'          # Dark text
+color_bg1 = '#011627'          # Dark text: night-owl's ground, so segment text reads navy, not grey
 color_bg3 = '#2E2E2E'
-color_1 = '#FF6B6B'            # Coral red (bright) → dark text
-color_2 = '#E28F2A'            # Deep orange → dark text
-color_3 = '#E6C229'            # Golden yellow → dark text
-color_4 = '#43B581'            # Emerald teal → dark text
-color_5 = '#4D96FF'            # Vibrant blue → white text
-color_6 = '#8C6FF0'            # Soft purple → white text
+color_1 = '#BF82FF'            # Violet  (P5: OKLCH C 0.20 capped to sRGB; lightness rises 0.72 to 0.89 so each hue holds its colour)
+color_2 = '#7997FF'            # Blue
+color_3 = '#53BBFE'            # Sky
+color_4 = '#00DDEF'            # Cyan
+color_5 = '#03F0BD'            # Mint
+color_6 = '#AEF455'            # Lime
 color_7 = '#e84118'
 color_8 = '#32ff7e'
 color_9 = '#fff200'
@@ -53,7 +45,7 @@ color_10 = '#ff9f1a'
 # ────────────────────────────────
 [os]
 disabled = false
-style = "bg:color_1 fg:color_bg1"   # dark text for contrast
+style = "bg:color_1 bold fg:color_bg1"   # dark text for contrast
 
 [os.symbols]
 Windows = "󰍲"
@@ -80,15 +72,15 @@ Pop = ""
 
 [username]
 show_always = true
-style_user = "bg:color_1 fg:color_bg1"   # dark text
-style_root = "bg:color_1 fg:color_bg1"
+style_user = "bg:color_1 bold fg:color_bg1"   # dark text
+style_root = "bg:color_1 bold fg:color_bg1"
 format = '[ $user ]($style)'
 
 # ────────────────────────────────
 # DIRECTORY
 # ────────────────────────────────
 [directory]
-style = "fg:color_bg1 bg:color_2"        # dark text for improved contrast
+style = "bold fg:color_bg1 bg:color_2"        # dark text for improved contrast
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -106,59 +98,27 @@ truncation_symbol = "…/"
 [git_branch]
 symbol = ""
 style = "bg:color_3"
-format = '[[ $symbol $branch ](fg:color_bg1 bg:color_3)]($style)'  # dark text
+format = '[[ $symbol $branch ](bold fg:color_bg1 bg:color_3)]($style)'  # dark text
 
 [git_status]
 style = "bg:color_3"
-format = '[[($all_status$ahead_behind )](fg:color_bg1 bg:color_3)]($style)'  # dark text
+format = '[[($all_status$ahead_behind )](bold fg:color_bg1 bg:color_3)]($style)'  # dark text
 
 # ────────────────────────────────
-# LANGUAGES (C, C++, JS, RUST, etc.)
+# GIT STATE / PROJECT VERSION
 # ────────────────────────────────
-[c]
-symbol = " "
+# Only shows while a rebase, merge, cherry-pick or bisect is in progress
+[git_state]
 style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'  # dark text
+format = '[[ $state( $progress_current/$progress_total) ](bold fg:color_bg1 bg:color_4)]($style)'
 
-[rust]
-symbol = ""
+# The project's own version (package.json, Cargo.toml, ...), not the runtime's.
+# Private packages too: most plugin repos are private but carry real versions.
+[package]
+symbol = ""
+display_private = true
 style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[golang]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[nodejs]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[php]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[java]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[kotlin]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[haskell]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
-
-[python]
-symbol = ""
-style = "bg:color_4"
-format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
+format = '[[ $symbol $version ](bold fg:color_bg1 bg:color_4)]($style)'
 
 # ────────────────────────────────
 # DOCKER / ENVIRONMENT
@@ -166,11 +126,11 @@ format = '[[ $symbol( $version) ](fg:color_bg1 bg:color_4)]($style)'
 [docker_context]
 symbol = ""
 style = "bg:color_5"
-format = '[[ $symbol( $context) ](fg:color_fg0 bg:color_5)]($style)'  # white text
+format = '[[ $symbol( $context) ](bold fg:color_bg1 bg:color_5)]($style)'  # dark text
 
 [conda]
 style = "bg:color_5"
-format = '[[ $symbol( $environment) ](fg:color_fg0 bg:color_5)]($style)'
+format = '[[ $symbol( $environment) ](bold fg:color_bg1 bg:color_5)]($style)'
 
 # ────────────────────────────────
 # TIME (Disabled)
@@ -179,7 +139,7 @@ format = '[[ $symbol( $environment) ](fg:color_fg0 bg:color_5)]($style)'
 disabled = true
 time_format = "%R"
 style = "bg:color_6"
-format = '[[  $time ](fg:color_fg0 bg:color_6)]($style)'  # white text
+format = '[[  $time ](bold fg:color_bg1 bg:color_6)]($style)'  # dark text
 
 # ────────────────────────────────
 # CHARACTER / PROMPT END
